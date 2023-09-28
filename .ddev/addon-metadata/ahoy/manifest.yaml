@@ -1,0 +1,12 @@
+name: ahoy
+repository: https://github.com/hanoii/ddev-ahoy/tarball/main
+version: ""
+install_date: "2023-09-28T12:21:42-03:00"
+project_files:
+    - commands/web/ahoy
+    - homeadditions/.bashrc.d/ahoy
+    - homeadditions/.local/share/bash-completion/completions/ahoy
+    - web-build/Dockerfile.ahoy
+    - config.ahoy.yaml
+global_files: []
+removal_actions: []

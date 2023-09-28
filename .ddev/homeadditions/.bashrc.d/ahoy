@@ -1,0 +1,2 @@
+#ddev-generated
+COMP_WORDBREAKS=${COMP_WORDBREAKS//:}

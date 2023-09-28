@@ -1,0 +1,8 @@
+#!/bin/bash
+#ddev-generated
+
+## Description: Run ahoy inside the web container
+## Usage: ahoy [args]
+## Example: "ddev ahoy some:command"
+
+ahoy $@

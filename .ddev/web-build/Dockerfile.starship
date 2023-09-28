@@ -1,0 +1,5 @@
+#ddev-generated
+# The ?v= is only there to bust the Dockerfile build cache if there's
+# a new version we wan't to make sure it'll get into the builds. It doesn't
+# change the installed version or the version of the install script.
+RUN curl -sS https://starship.rs/install.sh?v=1.16.0 | sh -s -- -y
