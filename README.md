@@ -76,7 +76,7 @@ You can configure this globally by doing
 
 **Assumes PR/feature branches are off a Staging branch branch named `staging`**
 
-TL;DR
+TL;DR - when you are ready to merge the PR/feature/branch
 
 - `git checkout staging`
 - `git pull`
