@@ -51,7 +51,7 @@ config `--global pull.rebase true`.
 
 ## Production/Staging branches
 
-**Staging should at all times be deployable to Production**
+**Staging should at all times be deployable to Production.**
 
 TL;DR
 
@@ -75,7 +75,10 @@ You can configure this globally by doing
 
 ## Pull requests/feature branches
 
-**Assumes PR/feature branches are off a Staging branch branch named `staging`**
+**Assumes PR/feature branches are off a Staging branch branch named `staging`.**
+
+**PR, feature/branches are short-lived, they must be removed once the work is
+merged.**
 
 TL;DR - when you are ready to merge the PR/feature/branch
 
