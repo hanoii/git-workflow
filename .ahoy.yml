@@ -1,7 +1,12 @@
 ahoyapi: v2
 commands:
   readme:
-    usage: 'Tidy up README'
+    usage: 'Tidy up README.md'
     cmd: |
       npx prettier README.md --write
-      ./node_modules/.bin/markdown-toc -i README.md
+      npx markdown-toc -i README.md
+
+  watch:
+    usage: 'Watch README.md for changes'
+    cmd: |
+      node watch.js
