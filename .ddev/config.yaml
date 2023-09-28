@@ -9,6 +9,7 @@ additional_fqdns: []
 database:
     type: mariadb
     version: "10.4"
+performance_mode: none
 hooks:
     post-start:
         - exec: npm install
