@@ -12,12 +12,12 @@ one after the other on top of a a new codebase. Each patch will then create a
 new commit.
 
 Normally, the `.patch` applies clean, but as you probably encountered it
-sometimes the patch fails to apply cleanly. This is when you will put your
-surgeon cap knife and work carefully. It’s pretty much the same as sorting out
-merge conflicts, but a merge commit is more easily revertable. The other problem
-with rebases is that it might require you to force-push, which is again
-dangerous, but in this workflow you would only force-pushing to the feature
-branch you are working on and about to merge, so not a huge deal.
+sometimes fails to apply cleanly. This is when you will put your surgeon cap
+knife and work carefully. It’s pretty much the same as sorting out merge
+conflicts, but a merge commit is more easily revertable. The other problem with
+rebases is that it might require you to force-push, which is again dangerous,
+but in this workflow you would only force-pushing to the feature branch you are
+working on and about to merge, so not a huge deal.
 
 <!-- toc -->
 
