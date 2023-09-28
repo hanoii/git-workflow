@@ -51,12 +51,13 @@ config `--global pull.rebase true`.
 
 ## Production/Staging branches
 
+**Staging should at all times be deployable to Production**
+
 TL;DR
 
 - `git checkout master`
 - `git pull`
 - `git merge staging --ff-only`
-- **staging should at all times be deployable to production**
 
 A common scheme is having at least one production branch (`master`, `main`, etc)
 and a staging branch (`stage`, `staging` , `develop`) that’s always where code
