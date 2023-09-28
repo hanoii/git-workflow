@@ -106,9 +106,9 @@ most important key element.
 
 ## Optional squashing
 
-I am not a fan of squashing, but usedwith common sense is helpful. If your
-feature branch is full of small commits that touches very little files/lines, it
-makes more sense to squash them that merge the whole history.
+I am not a fan of squashing, but used with common sense it can be helpful. If
+your feature branch is full of small commits that touches very little
+files/lines, it makes more sense to squash them that merge the whole history.
 
 TL;DR
 
