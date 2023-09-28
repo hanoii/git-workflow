@@ -1,0 +1,7 @@
+ahoyapi: v2
+commands:
+  readme:
+    usage: 'Tidy up README'
+    cmd: |
+      npx prettier README.md --write
+      ./node_modules/.bin/markdown-toc -i README.md
