@@ -106,6 +106,18 @@ This should be done at the last step just before merging the branch to staging,
 which is specially important if the feature/branch is being worked on by
 different developers.
 
+You should `git push --force-with-lease` your rebased code to the remote
+PR/feature branch just before merging.
+
+You can then proceed and checkout to your staging branch and merge your
+PR/feature branch with `git merge --no-ff feature/branch`. The --no-ff is meant
+to store a merge commit of the PR/feature branch so that the history can still
+be accessed.
+
+**Note: PR/feature branch are to be short-lived, so make sure you remove the
+remote (`git push origin :feature/branch`) and local PR/feature branch
+(`git branch -d feature/branch`).**
+
 ## Hotfixes to Production
 
 To be documented, but keeping master/staging with the exact same history is the
