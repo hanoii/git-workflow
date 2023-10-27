@@ -21,7 +21,7 @@ working on and about to merge, so not a huge deal.
 
 <!-- toc -->
 
-- [Pull rebase](#pull-rebase)
+- [Pull rebase keeping merges](#pull-rebase-keeping-merges)
 - [Production/Staging branches](#productionstaging-branches)
 - [Pull requests/feature branches](#pull-requestsfeature-branches)
 - [Hotfixes to Production](#hotfixes-to-production)
@@ -30,15 +30,18 @@ working on and about to merge, so not a huge deal.
 
 <!-- tocstop -->
 
-## Pull rebase
+## Pull rebase keeping merges
 
 TL;DR
 
-- `git pull --rebase`
-- `git config --global pull.rebase true`
+- `git pull --rebase-merges`
+- `git config --global pull.rebase merges`
 
 This will fetch whatever is in the remote and re-apply your local commits on top
 of the new code. This is to get rid of the remote merge commits.
+
+The `merges` option keeps your local merge commits, if any. This is to prevent
+accidentally dropping those on the master/staging branches.
 
 Because this is just a rebase of your local, no force push is necessary.
 
@@ -105,14 +108,14 @@ different developers.
 
 ## Hotfixes to Production
 
-To bedocumented, but keeping master/staging with the exact same history is the
+To be documented, but keeping master/staging with the exact same history is the
 most important key element.
 
 ## Optional squashing
 
 I am not a fan of squashing, but used with common sense it can be helpful. If
 your feature branch is full of small commits that touches very little
-files/lines, it makes more sense to squash them that merge the whole history.
+files/lines, it makes more sense to squash them than merge the whole history.
 
 TL;DR
 
