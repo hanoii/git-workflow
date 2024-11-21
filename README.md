@@ -176,6 +176,14 @@ Further paragraphs come after blank lines.
 - Use a hanging indent
 ```
 
+<!-- prettier-ignore -->
+> [!TIP]
+> I find **_50 chars or less_** too short. I tend to use the
+> [amazing GitSavvy Sublime Text plugin](https://github.com/timbrel/GitSavvy)
+> that has a
+> [sensible warning at +20 characters](https://github.com/timbrel/GitSavvy/blob/f2e6abd619558934de59bab9ebd0d750476798da/GitSavvy.sublime-settings#L134)
+> making **70 characters** a good summary line length.
+
 Even further, using [conventional commits][cc] can make a very nice changelog
 out of commit messages and also encourages you to [scope your commits
 better][cc-scope].
