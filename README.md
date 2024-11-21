@@ -24,6 +24,7 @@ working on and about to merge, so not a huge deal.
 - [Pull rebase keeping merges](#pull-rebase-keeping-merges)
 - [Production/Staging branches](#productionstaging-branches)
 - [Pull requests/feature branches](#pull-requestsfeature-branches)
+- [Pull requests review](#pull-requests-review)
 - [Hotfixes to Production](#hotfixes-to-production)
 - [Optional squashing](#optional-squashing)
 - [Commit messages](#commit-messages)
@@ -118,6 +119,11 @@ be accessed.
 remote (`git push origin :feature/branch`) and local PR/feature branch
 (`git branch -d feature/branch`).**
 
+## Pull requests review
+
+This is a nice emoji code you can use if you wanna do verbose code review:
+https://gist.github.com/pfleidi/4422a5cac5b04550f714f1f886d2feea
+
 ## Hotfixes to Production
 
 To be documented, but keeping master/staging with the exact same history is the
@@ -169,3 +175,8 @@ Further paragraphs come after blank lines.
   space, with blank lines in between, but conventions vary here
 - Use a hanging indent
 ```
+
+Other useful readings:
+
+- https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+- https://markus.oberlehner.net/blog/git-the-pedantic-way/
