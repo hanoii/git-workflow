@@ -178,7 +178,7 @@ Further paragraphs come after blank lines.
 
 <!-- prettier-ignore -->
 > [!TIP]
-> I find **_50 chars or less_** too short. I tend to use the
+> I find **_50 chars or less_** too short. I normally use the
 > [amazing GitSavvy Sublime Text plugin](https://github.com/timbrel/GitSavvy)
 > that has a
 > [sensible warning at +20 characters](https://github.com/timbrel/GitSavvy/blob/f2e6abd619558934de59bab9ebd0d750476798da/GitSavvy.sublime-settings#L134)
