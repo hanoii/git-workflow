@@ -10,9 +10,6 @@ database:
     type: mariadb
     version: "10.11"
 performance_mode: none
-hooks:
-    post-start:
-        - exec: npm install
 omit_containers: [db]
 use_dns_when_possible: true
 composer_version: "2"
