@@ -1,0 +1,14 @@
+#ddev-generated
+ahoyapi: v2
+commands:
+  build:
+    usage: 'Tidy up README.md'
+    cmd: /var/www/html/.ddev/readme/build.sh
+
+  watch:
+    usage: 'Watch README.md for changes'
+    cmd: $(/var/www/html/.ddev/readme/whichnode.sh)node /var/www/html/.ddev/readme/watch.cjs
+
+  toc:
+    usage: 'Generate the TOC to stdout'
+    cmd: $(/var/www/html/.ddev/readme/whichnode.sh)markdown-toc /var/www/html/README.md

@@ -1,4 +1,0 @@
-#ddev-generated
-# This is to prevent https://github.com/starship/starship/pull/5438
-export STARSHIP_PREEXEC_READY=true
-eval "$(starship init bash)"

@@ -1,0 +1,27 @@
+#ddev-generated
+hooks:
+  post-import-db:
+    - exec: /var/www/html/.ddev/pimp-my-shell/hooks/post-import-db.sh
+webimage_extra_packages:
+  - ansilove
+  - bash-completion
+  - boxes
+  - bsdmainutils
+  - build-essential
+  - colorized-logs
+  - cowsay
+  - dialog
+  - figlet
+  - htop
+  - libarchive-tools
+  - lolcat
+  - lua5.4
+  - man-db
+  - net-tools
+  - pipx
+  - pv
+  - screen
+  - vim-nox
+web_environment:
+  - COLORTERM=${COLORTERM}
+  - TERM=${TERM}

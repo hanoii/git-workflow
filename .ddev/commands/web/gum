@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#ddev-generated
+## Description: Run gum in the web container
+## Usage: gum
+## Example: "ddev gum"
+## ExecRaw: true
+## HostWorkingDir: true
+
+gum "$@"
