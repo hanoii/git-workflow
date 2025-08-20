@@ -42,7 +42,7 @@ This will fetch whatever is in the remote and reapply your local commits on top
 of the new code. This eliminates unnecessary remote merge commits.
 
 The `merges` option keeps your local merge commits, if any. This prevents
-accidentally dropping those on the master/staging branches.
+accidentally dropping those on the `main`/`staging` branches.
 
 Because this is just a rebase of your local commits, no force push is necessary.
 
@@ -59,23 +59,22 @@ You can try it out and then configure it as your default for every project with
 
 TL;DR
 
-- `git checkout master`
+- `git checkout main`
 - `git pull`
 - `git merge staging --ff-only`
 
-A common scheme is having at least one production branch (`master`, `main`,
-etc.) and a staging branch (`stage`, `staging`, `develop`) that's always where
-code lands before being merged onto the production branch.
+A common scheme is having at least one production branch (`main`) and a staging
+branch (`stage`, `staging`, `develop`) that's always where code lands before
+being merged onto the production branch.
 
 Since the history between staging and production should ideally always be the
-same, having a merge commit on master from staging makes no sense. To avoid
+same, having a merge commit on `main` from `staging` makes no sense. To avoid
 this, you should normally merge with `--ff-only`, which performs a fast-forward.
 If this fails, it's because the history of the production branch has diverged
 and needs to be fixed accordingly.
 
 You can configure this globally by doing
-`git config --global branch.master.mergeOptions --ff-only` for master and
-`git config --global branch.main.mergeOptions --ff-only` for main.
+`git config --global branch.main.mergeOptions --ff-only`.
 
 ## Pull requests/feature branches
 
@@ -126,7 +125,7 @@ https://gist.github.com/pfleidi/4422a5cac5b04550f714f1f886d2feea
 
 ## Hotfixes to production
 
-To be documented. The most important element is keeping master/staging with
+To be documented. The most important element is keeping `main`/`staging` with
 exactly the same history.
 
 ## Optional squashing
