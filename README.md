@@ -134,8 +134,8 @@ for the PR/feature branch so that the history remains accessible.
 
 ### `--force-with-lease` and `--force-if-includes`
 
-It's important to use `--force-with-lease` together with
-`--force-if-includes`\*\* when force-pushing rebased branches.
+It's important to use `--force-with-lease` together with `--force-if-includes`
+when force-pushing rebased branches.
 
 `--force-with-lease` alone can be defeated by background auto-fetches (common in
 IDEs like LazyGit, VS Code, etc.) that update your remote-tracking branch
