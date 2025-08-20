@@ -109,6 +109,13 @@ TL;DR - when you are ready to merge the PR/feature branch
 > when `--force-with-lease` is used). Note: there's currently no configuration to make
 > `--force-with-lease` the default for pushes.
 
+<!-- prettier-ignore -->
+> [!TIP]
+> You can also configure no-fast-forward merges as the default with
+> `git config --global merge.ff false` (sets `--no-ff` as the default merge strategy for all branches).
+> Note: we've already configured `main` to use `--ff-only` when merging into it, which is
+> more restrictive and takes precedence for that specific branch.
+
 If we merge PR/feature branches as-is, multiple PR/feature branches can have
 commits happening at different times. While this is acceptable, it gives a much
 clearer history graph if we rebase first. Furthermore, rebasing removes the
