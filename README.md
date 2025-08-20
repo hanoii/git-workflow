@@ -65,6 +65,12 @@ TL;DR
 - `git pull`
 - `git merge staging --ff-only`
 
+<!-- prettier-ignore -->
+> [!TIP]
+> You can configure this globally with
+> `git config --global branch.main.mergeOptions --ff-only` (sets the default merge
+> strategy for the `main` branch).
+
 A common scheme is having at least one production branch (`main`) and a staging
 branch (`stage`, `staging`, `develop`) that's always where code lands before
 being merged onto the production branch.
@@ -74,12 +80,6 @@ same, having a merge commit on `main` from `staging` makes no sense. To avoid
 this, you should normally merge with `--ff-only`, which performs a fast-forward.
 If this fails, it's because the history of the production branch has diverged
 and needs to be fixed accordingly.
-
-<!-- prettier-ignore -->
-> [!TIP]
-> You can configure this globally with
-> `git config --global branch.main.mergeOptions --ff-only` (sets the default merge
-> strategy for the `main` branch).
 
 ## Pull requests/feature branches
 
