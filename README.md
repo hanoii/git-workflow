@@ -13,7 +13,7 @@ new commit.
 
 Normally, the `.patch` applies cleanly, but as you have probably encountered, it
 sometimes fails to apply properly. This is when you will put on your surgeon's
-cap and work carefully. It’s pretty much the same as sorting out merge
+cap and work carefully. It's pretty much the same as sorting out merge
 conflicts, but a merge commit is more easily revertible. The other problem with
 rebases is that they might require you to force-push, which is again dangerous,
 but in this workflow you would only be force-pushing to the feature branch you
@@ -64,7 +64,7 @@ TL;DR
 - `git merge staging --ff-only`
 
 A common scheme is having at least one production branch (`master`, `main`,
-etc.) and a staging branch (`stage`, `staging`, `develop`) that’s always where
+etc.) and a staging branch (`stage`, `staging`, `develop`) that's always where
 code lands before being merged onto the production branch.
 
 Since the history between staging and production should ideally always be the
@@ -90,7 +90,7 @@ TL;DR - when you are ready to merge the PR/feature branch
 - `git checkout staging`
 - `git pull`
 - `git checkout feature/branch`
-- `git rebase staging` (can cause conflicts which you’ll need to fix)
+- `git rebase staging` (can cause conflicts which you'll need to fix)
 - `git push --force-with-lease`
 - `git checkout staging`
 - `git merge --no-ff feature/branch`
@@ -138,7 +138,7 @@ it makes more sense to squash them than to merge the whole history.
 TL;DR
 
 - `git checkout staging`
-- `git merge feature/branch --squash` (there’s no commit here yet, but changes
+- `git merge feature/branch --squash` (there's no commit here yet, but changes
   are staged)
 - `git commit -m "JIRA-1234: something done"` (JIRA-1234 or whatever references
   your PM tool of choice)
@@ -221,7 +221,7 @@ From the [Conventional Commits specification][cc]:
 >
 > Additional types are not mandated by the Conventional Commits specification,
 > and have no implicit effect in Semantic Versioning (unless they include a
-> BREAKING CHANGE). A scope may be provided to a commit’s type, to provide
+> BREAKING CHANGE). A scope may be provided to a commit's type, to provide
 > additional contextual information and is contained within parentheses, e.g.,
 > `feat(parser): add ability to parse arrays`.
 
