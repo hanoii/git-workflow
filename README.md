@@ -25,6 +25,7 @@ are working on and about to merge, so it's not a huge deal.
 - [Production/Staging branches](#productionstaging-branches)
 - [Pull requests/feature branches](#pull-requestsfeature-branches)
   * [`--force-with-lease` and `--force-if-includes`](#--force-with-lease-and---force-if-includes)
+- [Rebasing](#rebasing)
 - [Pull request review](#pull-request-review)
 - [Hotfixes to production](#hotfixes-to-production)
 - [Optional squashing](#optional-squashing)
@@ -163,6 +164,30 @@ the force-push.
 - https://github.com/jesseduffield/lazygit/issues/1668#issuecomment-1956201168
 - https://github.com/jesseduffield/lazygit/issues/1668#issuecomment-1956549518
 - https://stackoverflow.com/questions/65837109/when-should-i-use-git-push-force-if-includes
+
+## Rebasing
+
+When rebasing branches that contain merge commits (such as rebasing `staging`
+itself), use `--rebase-merges` to preserve the existing merge commits from
+feature branches. This is a safer rebasing approach that maintains the merge
+structure rather than linearizing all commits.
+
+```bash
+git rebase --rebase-merges main
+```
+
+This is particularly useful when you need to rebase a staging branch that
+contains multiple feature branch merges and you want to preserve that merge
+history in the rebased result.
+
+Note: You can use `--no-rebase-merges` to explicitly disable this behavior if
+needed.
+
+<!-- prettier-ignore -->
+> [!TIP]
+> You can configure this as the default rebase behavior with
+> `git config --global rebase.rebaseMerges true` (sets `--rebase-merges` as
+> the default for all rebase operations).
 
 ## Pull request review
 
