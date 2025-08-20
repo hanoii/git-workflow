@@ -1,5 +1,20 @@
 #ddev-generated
 hooks:
+  pre-start:
+    - exec-host: |
+        if ${DDEV_EXECUTABLE} debug match-constraint "> 1.24.4-0 <= 1.24.4-zzzzzz || > 1.24.4" 2>/dev/null ; then
+          cp .ddev/web-build/1.24.5-Dockerfile.~pimp-my-shell .ddev/web-build/Dockerfile.~pimp-my-shell
+          echo -e "\033[0;32m\u26A1 The addon hanoii/ddev-pimp-my-shell is now using multi-stage image build.\033[0m"
+        else
+          cp .ddev/web-build/1.24.4-Dockerfile.pimp-my-shell .ddev/web-build/Dockerfile.~pimp-my-shell
+          echo -en "\033[0;33m"
+          echo -e "\n+----------------------------------------------------------------------------"
+          echo -e "| \U26A0\UFE0F The addon hanoii/ddev-pimp-my-shell now supports multi-stage builds on"
+          echo -e "| DDEV versions 1.24.5+, improving image build time dramatically."
+          echo -e "| \e[1mIt is strongly recommended that you upgrade DDEV.\e[22m"
+          echo -e "+----------------------------------------------------------------------------\n"
+          echo -en "\033[0m"
+        fi
   post-import-db:
     - exec: /var/www/html/.ddev/pimp-my-shell/hooks/post-import-db.sh
 webimage_extra_packages:
@@ -8,19 +23,22 @@ webimage_extra_packages:
   - boxes
   - bsdmainutils
   - build-essential
+  - certbot
   - colorized-logs
   - cowsay
   - dialog
+  - dnsutils
   - figlet
   - htop
   - libarchive-tools
   - lolcat
   - lua5.4
   - man-db
+  - moreutils
   - net-tools
-  - pipx
   - pv
   - screen
+  - time
   - vim-nox
 web_environment:
   - COLORTERM=${COLORTERM}

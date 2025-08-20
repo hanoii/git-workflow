@@ -1,0 +1,361 @@
+#ddev-generated
+
+FROM $BASE_IMAGE AS pimp-my-shell-base
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+echo -e '#!/usr/bin/env bash\n\nset -eux\n/usr/bin/curl -fL --retry 3 --retry-delay 2 "$@"' > /usr/local/bin/curl-pimp-my-shell
+chmod +x /usr/local/bin/curl-pimp-my-shell
+EOF
+
+# ahoy
+FROM pimp-my-shell-base AS pimp-my-shell-ahoy
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+AHOY_VERSION=2.5.0
+AARCH=$(uname -m)
+AARCH=${AARCH/aarch64/arm64}
+AARCH=${AARCH/x86_64/amd64}
+curl-pimp-my-shell -o /usr/local/bin/ahoy https://github.com/ahoy-cli/ahoy/releases/download/v${AHOY_VERSION}/ahoy-bin-linux-${AARCH}
+chmod +x /usr/local/bin/ahoy
+EOF
+
+# startship
+FROM pimp-my-shell-base AS pimp-my-shell-starship
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+STARSHIP_VERSION=1.23.0
+AARCH=$(uname -m)
+AARCH=${AARCH/i386/i686}
+curl-pimp-my-shell -o starship.tar.gz https://github.com/starship/starship/releases/download/v${STARSHIP_VERSION}/starship-${AARCH}-unknown-linux-musl.tar.gz
+tar -zxf starship.tar.gz -C /usr/local/bin
+rm starship.tar.gz
+EOF
+
+# gum
+FROM pimp-my-shell-base AS pimp-my-shell-gum
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+GUM_VERSION=0.16.2
+AARCH=$(uname -m)
+AARCH=${AARCH/aarch64/arm64}
+AARCH=${AARCH/i686/i386}
+curl-pimp-my-shell -o gum.tar.gz https://github.com/charmbracelet/gum/releases/download/v${GUM_VERSION}/gum_${GUM_VERSION}_Linux_${AARCH}.tar.gz
+tar -zxf gum.tar.gz --strip-components=1 -C /opt
+rm gum.tar.gz
+EOF
+
+# fzf
+FROM pimp-my-shell-base AS pimp-my-shell-fzf
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+FZF_VERSION=0.65.1
+AARCH=$(uname -m)
+AARCH=${AARCH/aarch64/arm64}
+AARCH=${AARCH/x86_64/amd64}
+curl-pimp-my-shell -o fzf.tar.gz https://github.com/junegunn/fzf/releases/download/v${FZF_VERSION}/fzf-${FZF_VERSION}-linux_${AARCH}.tar.gz
+tar -zxf fzf.tar.gz -C /usr/local/bin
+rm fzf.tar.gz
+EOF
+
+# fzf-git.sh
+FROM pimp-my-shell-base AS pimp-my-shell-fzfgit
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+FZFGIT_SHA1=79e10ccaa8b3bddff95cd1dcb44b0c30a39da71f
+curl-pimp-my-shell -o /opt/fzf-git.sh https://raw.githubusercontent.com/junegunn/fzf-git.sh/${FZFGIT_SHA1}/fzf-git.sh
+EOF
+
+# eza
+FROM pimp-my-shell-base AS pimp-my-shell-eza
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+EZA_VERSION=0.23.0
+curl-pimp-my-shell -o eza.tar.gz https://github.com/eza-community/eza/releases/download/v${EZA_VERSION}/eza_`uname -m`-unknown-linux-gnu.tar.gz
+curl-pimp-my-shell -o eza-completions.tar.gz https://github.com/eza-community/eza/releases/download/v${EZA_VERSION}/completions-${EZA_VERSION}.tar.gz
+tar -zxf eza.tar.gz -C /usr/local/bin
+tar -xzf eza-completions.tar.gz --strip-components=3 -C /opt ./target/completions-${EZA_VERSION}/eza
+tar -xzf eza-completions.tar.gz --strip-components=3 -C /opt ./target/completions-${EZA_VERSION}/eza.fish
+rm eza.tar.gz
+rm eza-completions.tar.gz
+EOF
+
+# fish
+#
+# Opensuse doesn't keep older files of the fish build, so this will always use
+# the latest regardless of the fish version specified below in the
+# `apt satisfy` command. However, this allows for proper docker build cache
+# busting ensuring you always have the last version when it's updated.
+FROM pimp-my-shell-base AS pimp-my-shell-fish
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+FISH_VERSION=4.0.2-2
+DEBIAN=$(lsb_release -rs)
+echo "deb http://download.opensuse.org/repositories/shells:/fish:/release:/4/Debian_${DEBIAN}/ /" | sudo tee /etc/apt/sources.list.d/shells:fish:release:4.list
+curl-pimp-my-shell -sS https://download.opensuse.org/repositories/shells:fish:release:4/Debian_${DEBIAN}/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/shells_fish_release_4.gpg > /dev/null
+apt update
+apt -o APT::Install-Recommends=false satisfy -y "fish (>=${FISH_VERSION})"
+rm -rf /var/lib/apt/lists/*
+EOF
+
+FROM pimp-my-shell-fish AS pimp-my-shell-fisher
+SHELL ["/bin/fish", "-c"]
+RUN <<EOF
+set fish_trace 1
+export FISHER_VERSION=4.4.5
+curl-pimp-my-shell -o /tmp/fisher.fish https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish
+source /tmp/fisher.fish
+fisher install jorgebucaran/fisher@$FISHER_VERSION
+rm /tmp/fisher.fish
+EOF
+
+FROM pimp-my-shell-fisher AS pimp-my-shell-fisher-plugins
+SHELL ["/bin/fish", "-c"]
+RUN <<EOF
+set fish_trace 1
+export BASS_VERSION=1.0
+fisher install edc/bass@v$BASS_VERSION
+export TIDE_VERSION=6.2.0
+fisher install IlanCosman/tide@v$TIDE_VERSION
+tide configure --auto --style=Classic --prompt_colors='True color' --classic_prompt_color=Light --show_time='24-hour format' --classic_prompt_separators=Angled --powerline_prompt_heads=Sharp --powerline_prompt_tails=Flat --powerline_prompt_style='One line' --prompt_spacing=Compact --icons='Many icons' --transient=Yes
+EOF
+
+#z.lua
+FROM pimp-my-shell-base AS pimp-my-shell-zlua
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+ZLUA_VERSION=1.8.24
+mkdir -p /opt/z.lua
+cd /opt/z.lua
+curl-pimp-my-shell -o zlua.zip https://github.com/skywind3000/z.lua/archive/refs/tags/${ZLUA_VERSION}.zip
+unzip zlua.zip
+mv z.lua-${ZLUA_VERSION} z.lua
+rm zlua.zip
+EOF
+
+#xterm-kitty
+FROM pimp-my-shell-base AS pimp-my-shell-xterm-kitty
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+KITTY_VERSION=0.42.2
+mkdir -p /usr/share/terminfo/x
+cd /usr/share/terminfo/x
+curl-pimp-my-shell -o xterm-kitty https://github.com/kovidgoyal/kitty/raw/refs/tags/v${KITTY_VERSION}/terminfo/x/xterm-kitty
+EOF
+
+# go
+FROM pimp-my-shell-base AS pimp-my-shell-go
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+GO_VERSION=1.25.0
+AARCH=$(uname -m)
+AARCH=${AARCH/aarch64/arm64}
+AARCH=${AARCH/x86_64/amd64}
+AARCH=${AARCH/i386/386}
+AARCH=${AARCH/i686/386}
+curl-pimp-my-shell -o go.tar.gz https://go.dev/dl/go${GO_VERSION}.linux-${AARCH}.tar.gz
+tar -C /usr/local -xzf go.tar.gz
+rm go.tar.gz;
+EOF
+
+# go - sysbox
+FROM pimp-my-shell-go AS pimp-my-shell-go-sysbox
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+SYSBOX_VERSION=0.19.0
+/usr/local/go/bin/go install github.com/skx/sysbox@release-${SYSBOX_VERSION}
+/usr/local/go/bin/go clean -cache -modcache
+EOF
+
+# go - recur
+FROM pimp-my-shell-go AS pimp-my-shell-go-recur
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+RECUR_VERSION=2.4.0
+/usr/local/go/bin/go install dbohdan.com/recur/v2@v${RECUR_VERSION}
+/usr/local/go/bin/go clean -cache -modcache
+EOF
+
+# tte
+FROM pimp-my-shell-base AS pimp-my-shell-tte
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+apt-get update
+apt-get install -y --no-install-recommends pipx
+TTE_VERSION=0.12.0
+pipx install terminaltexteffects==${TTE_VERSION}
+apt-get purge -y pipx
+apt-get autoremove -y
+rm -rf /var/lib/apt/lists/*
+EOF
+RUN <<EOF
+# Change the shebang to /opt/terminaltexteffects which is where I am going to
+# copy it
+sed -i '1s|^#!/root/.local/pipx/venvs/terminaltexteffects/bin/python|#!/opt/terminaltexteffects/bin/python|' /root/.local/pipx/venvs/terminaltexteffects/bin/tte
+EOF
+
+# fd
+FROM pimp-my-shell-base AS pimp-my-shell-fd
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+FD_VERSION=10.2.0
+AARCH=$(uname -m)
+AARCH=${AARCH/i386/i686}
+curl-pimp-my-shell -o fd.tar.gz https://github.com/sharkdp/fd/releases/download/v${FD_VERSION}/fd-v${FD_VERSION}-${AARCH}-unknown-linux-musl.tar.gz
+tar -zxf fd.tar.gz --strip-components=1 -C /opt
+rm fd.tar.gz
+EOF
+
+# bat
+FROM pimp-my-shell-base AS pimp-my-shell-bat
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+BAT_VERSION=0.25.0
+AARCH=$(uname -m)
+AARCH=${AARCH/i386/i686}
+curl-pimp-my-shell -o bat.tar.gz https://github.com/sharkdp/bat/releases/download/v${BAT_VERSION}/bat-v${BAT_VERSION}-${AARCH}-unknown-linux-musl.tar.gz
+tar -zxf bat.tar.gz --strip-components=1 -C /opt
+rm bat.tar.gz
+EOF
+
+# rust
+FROM pimp-my-shell-base AS pimp-my-shell-rust
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+RUST_VERSION=1.89.0
+curl-pimp-my-shell -sS https://sh.rustup.rs/ | sh -s -- --profile minimal --default-toolchain=${RUST_VERSION} -y
+EOF
+
+# lazygit
+FROM pimp-my-shell-base AS pimp-my-shell-lazygit
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+LAZYGIT_VERSION=0.54.2
+AARCH=$(uname -m)
+AARCH=${AARCH/aarch64/arm64}
+AARCH=${AARCH/i386/32-bit}
+AARCH=${AARCH/i686/32-bit}
+curl-pimp-my-shell -o lazygit.tar.gz https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_${AARCH}.tar.gz
+tar -zxf lazygit.tar.gz -C /usr/local/bin
+rm lazygit.tar.gz
+EOF
+
+# ov
+FROM pimp-my-shell-base AS pimp-my-shell-ov
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+OV_VERSION=0.42.1
+AARCH=$(uname -m)
+AARCH=${AARCH/aarch64/arm64}
+AARCH=${AARCH/x86_64/amd64}
+AARCH=${AARCH/i386/386}
+AARCH=${AARCH/i686/386}
+curl-pimp-my-shell -o ov.zip https://github.com/noborus/ov/releases/download/v${OV_VERSION}/ov_${OV_VERSION}_linux_${AARCH}.zip
+unzip ov.zip -d /usr/local/bin/ ov
+rm ov.zip
+EOF
+
+# bun
+FROM pimp-my-shell-base AS pimp-my-shell-bun
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+BUN_VERSION=1.2.20
+curl-pimp-my-shell -sS https://bun.sh/install | bash -s "bun-v${BUN_VERSION}"
+cd /root/.bun/bin
+ln -fs bun bunx
+EOF
+
+# gh
+FROM pimp-my-shell-base AS pimp-my-shell-gh
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+GH_VERSION=2.76.2
+AARCH=$(uname -m)
+AARCH=${AARCH/aarch64/arm64}
+AARCH=${AARCH/x86_64/amd64}
+AARCH=${AARCH/i386/386}
+AARCH=${AARCH/i686/386}
+curl-pimp-my-shell -o gh.tar.gz https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_${AARCH}.tar.gz
+tar -zxf gh.tar.gz --strip-components=1 -C /opt
+rm gh.tar.gz
+EOF
+
+# delta
+FROM pimp-my-shell-base AS pimp-my-shell-delta
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+DELTA_VERSION=0.18.2
+AARCH=$(uname -m)
+curl-pimp-my-shell -o delta.tar.gz https://github.com/dandavison/delta/releases/download/${DELTA_VERSION}/delta-${DELTA_VERSION}-${AARCH}-unknown-linux-gnu.tar.gz
+tar -zxf delta.tar.gz --strip-components=1 -C /opt
+rm delta.tar.gz
+EOF
+
+# spacer
+FROM pimp-my-shell-base AS pimp-my-shell-spacer
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+SPACER_VERSION=0.4.5
+AARCH=$(uname -m)
+curl-pimp-my-shell -o spacer.tar.gz https://github.com/samwho/spacer/releases/download/v${SPACER_VERSION}/spacer-${AARCH}-unknown-linux-gnu.tar.gz
+tar -zxf spacer.tar.gz -C /usr/local/bin;
+rm spacer.tar.gz
+EOF
+
+# multitail with a recent PR of my own included
+# https://github.com/folkertvanheusden/multitail/pull/52
+FROM pimp-my-shell-base AS pimp-my-shell-multitail
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+apt-get update
+apt-get install -y --no-install-recommends build-essential cmake libncurses-dev ninja-build
+MULTITAIL_SHA1=78063c0a4d37392599a40ae3c4ccecbd1887027c
+mkdir -p /opt/multitail
+cd /opt/multitail
+curl-pimp-my-shell -o multitail.tar.gz "https://github.com/folkertvanheusden/multitail/tarball/${MULTITAIL_SHA1}"
+tar --strip-components=1 -zxf multitail.tar.gz
+make BUILD_DIR=build
+apt-get purge -y build-essential cmake libncurses-dev ninja-build
+apt-get autoremove -y
+rm -rf /var/lib/apt/lists/*
+EOF
+
+# latest tmux, statically linked
+FROM pimp-my-shell-base AS pimp-my-shell-tmux
+SHELL ["/bin/bash", "-c"]
+RUN <<EOF
+set -eux
+apt-get update
+apt-get install -y --no-install-recommends libevent-dev ncurses-dev build-essential bison pkg-config
+TMUX_VERSION=3.5a
+mkdir -p /opt/tmux
+cd /opt/tmux
+curl-pimp-my-shell -o tmux.tar.gz "https://github.com/tmux/tmux/releases/download/${TMUX_VERSION}/tmux-${TMUX_VERSION}.tar.gz"
+tar --strip-components=1 -zxf tmux.tar.gz
+./configure --enable-static
+make
+apt-get purge -y libevent-dev ncurses-dev build-essential bison pkg-config
+apt-get autoremove -y
+rm -rf /var/lib/apt/lists/*
+EOF

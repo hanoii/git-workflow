@@ -4,7 +4,6 @@
 fish_add_path /usr/games
 
 # fzf
-fish_add_path /opt/fzf/bin
 function fish_user_key_bindings
   fzf --fish | source
 end
@@ -34,7 +33,12 @@ if test -f /mnt/ddev-global-cache/fishhistory/$HOSTNAME/fish_history
 end
 
 function fish_title
-  set --local title "$DDEV_PROJECT/ddev: "(fish_prompt_pwd_dir_length=1 prompt_pwd)
+  set --local title (
+    printf "%s%s/ddev: %s" \
+      "$PIMP_MY_SHELL_TITLE_PREFIX" \
+      "$DDEV_PROJECT" \
+      (fish_prompt_pwd_dir_length=1 prompt_pwd)
+  )
   if count $argv > /dev/null
     set title "$argv - $title"
   end
@@ -56,3 +60,12 @@ end
 function ll --wraps eza --description "eza -la --icons --octal-permissions --group-directories-first"
     eza -la --icons --octal-permissions --group-directories-first $argv
 end
+
+# rust
+fish_add_path ~/.cargo/bin
+
+# delta
+git config --global core.pager delta
+git config --global interactive.diffFilter 'delta --color-only'
+git config --global delta.navigate true
+git config --global merge.conflictStyle zdiff3

@@ -6,4 +6,4 @@
 ## Example: ddev fish
 ## ExecRaw: true
 
-ddev exec fish "$@"
+fish "$@"

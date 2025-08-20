@@ -1,4 +1,2 @@
 #ddev-generated
 disableStartupPopups: true
-gui:
-  showFileTree: false

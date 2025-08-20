@@ -1,7 +1,7 @@
 #ddev-generated
 
 # Path
-export PATH=~/.bun/bin:~/.local/bin:$PATH:/usr/games
+export PATH=~/.bun/bin:~/.local/bin:~/.composer/vendor/bin:$PATH:/usr/games
 
 # This is so that child processes have appropriate access to this var
 export SHELL
@@ -16,7 +16,7 @@ esac
 COMP_WORDBREAKS=${COMP_WORDBREAKS//:}
 
 # fzf
-source /opt/.fzf.bash
+eval "$(fzf --bash)"
 
 # fzf-git
 source /opt/fzf-git.sh/fzf-git.sh
@@ -40,7 +40,7 @@ function set_win_title(){
   # Shortening $PWD
   # /var/www/html -> /v/w/html
   local short_pwd=$(echo "$PWD" | sed 's/\([^\/]\)[^\/]*\//\1\//g')
-  echo -ne "\033]0;$@$DDEV_PROJECT/ddev: $short_pwd\007"
+  echo -ne "\033]0;$@$PIMP_MY_SHELL_TITLE_PREFIX$DDEV_PROJECT/ddev: $short_pwd\007"
 }
 starship_precmd_user_func="set_win_title"
 trap "set_win_title \"\${BASH_COMMAND} - \"" DEBUG
@@ -55,3 +55,12 @@ alias ll='eza -la --icons --octal-permissions --group-directories-first'
 export PATH=$PATH:/usr/local/go/bin:~/go/bin
 unset GOARCH
 unset GOOS
+
+# rust
+. ~/.cargo/env
+
+# delta
+git config --global core.pager delta
+git config --global interactive.diffFilter 'delta --color-only'
+git config --global delta.navigate true
+git config --global merge.conflictStyle zdiff3
