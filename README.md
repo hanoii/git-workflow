@@ -43,8 +43,6 @@ TL;DR
 > You can configure this as your default pull behavior with
 > `git config --global pull.rebase merges`
 
----
-
 This will fetch whatever is in the remote and reapply your local commits on top
 of the new code. This eliminates unnecessary remote merge commits.
 
@@ -66,8 +64,6 @@ TL;DR
 - `git checkout main`
 - `git pull`
 - `git merge staging --ff-only`
-
----
 
 A common scheme is having at least one production branch (`main`) and a staging
 branch (`stage`, `staging`, `develop`) that's always where code lands before
@@ -112,8 +108,6 @@ TL;DR - when you are ready to merge the PR/feature branch
 > `git config --global push.useForceIfIncludes true` (automatically adds `--force-if-includes`
 > when `--force-with-lease` is used). Note: there's currently no configuration to make
 > `--force-with-lease` the default for pushes.
-
----
 
 If we merge PR/feature branches as-is, multiple PR/feature branches can have
 commits happening at different times. While this is acceptable, it gives a much
@@ -185,8 +179,6 @@ TL;DR
 - `git push`
 - `git push origin :feature/branch` (removes remote branch)
 - `git branch -d feature/branch` (removes local branch)
-
----
 
 ## Commit messages
 
