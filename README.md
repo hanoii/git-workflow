@@ -113,6 +113,7 @@ TL;DR - when you are ready to merge the PR/feature branch
 > [!TIP]
 > You can also configure no-fast-forward merges as the default with
 > `git config --global merge.ff false` (sets `--no-ff` as the default merge strategy for all branches).
+>
 > Note: we've already configured `main` to use `--ff-only` when merging into it, which is
 > more restrictive and takes precedence for that specific branch.
 
