@@ -24,6 +24,7 @@ are working on and about to merge, so it's not a huge deal.
 - [Pull rebase keeping merges](#pull-rebase-keeping-merges)
 - [Production/Staging branches](#productionstaging-branches)
 - [Pull requests/feature branches](#pull-requestsfeature-branches)
+  * [`--force-with-lease` and `--force-if-includes`](#--force-with-lease-and---force-if-includes)
 - [Pull request review](#pull-request-review)
 - [Hotfixes to production](#hotfixes-to-production)
 - [Optional squashing](#optional-squashing)
@@ -36,7 +37,13 @@ are working on and about to merge, so it's not a huge deal.
 TL;DR
 
 - `git pull --rebase-merges`
-- `git config --global pull.rebase merges`
+
+<!-- prettier-ignore -->
+> [!TIP]
+> You can configure this as your default pull behavior with
+> `git config --global pull.rebase merges`
+
+---
 
 This will fetch whatever is in the remote and reapply your local commits on top
 of the new code. This eliminates unnecessary remote merge commits.
@@ -50,9 +57,6 @@ Conflicts can happen, so you can either fix them, commit, and continue the
 rebase (`git rebase --continue`) or abort it (`git rebase --abort`) and go back
 to pulling normally if you want to be cautious: `git pull --merge`.
 
-You can try it out and then configure it as your default for every project with
-`git config --global pull.rebase true`.
-
 ## Production/Staging branches
 
 **Staging should at all times be deployable to Production.**
@@ -62,6 +66,8 @@ TL;DR
 - `git checkout main`
 - `git pull`
 - `git merge staging --ff-only`
+
+---
 
 A common scheme is having at least one production branch (`main`) and a staging
 branch (`stage`, `staging`, `develop`) that's always where code lands before
@@ -73,8 +79,11 @@ this, you should normally merge with `--ff-only`, which performs a fast-forward.
 If this fails, it's because the history of the production branch has diverged
 and needs to be fixed accordingly.
 
-You can configure this globally by doing
-`git config --global branch.main.mergeOptions --ff-only`.
+<!-- prettier-ignore -->
+> [!TIP]
+> You can configure this globally with
+> `git config --global branch.main.mergeOptions --ff-only` (sets the default merge
+> strategy for the `main` branch).
 
 ## Pull requests/feature branches
 
@@ -90,12 +99,21 @@ TL;DR - when you are ready to merge the PR/feature branch
 - `git pull`
 - `git checkout feature/branch`
 - `git rebase staging` (can cause conflicts which you'll need to fix)
-- `git push --force-with-lease`
+- `git push --force-with-lease --force-if-includes`
 - `git checkout staging`
 - `git merge --no-ff feature/branch`
 - `git push`
 - `git push origin :feature/branch` (removes remote branch)
 - `git branch -d feature/branch` (removes local branch)
+
+<!-- prettier-ignore -->
+> [!TIP]
+> You can configure safer force-pushing as the default with
+> `git config --global push.useForceIfIncludes true` (automatically adds `--force-if-includes`
+> when `--force-with-lease` is used). Note: there's currently no configuration to make
+> `--force-with-lease` the default for pushes.
+
+---
 
 If we merge PR/feature branches as-is, multiple PR/feature branches can have
 commits happening at different times. While this is acceptable, it gives a much
@@ -108,15 +126,38 @@ staging, which is especially important if the feature branch is being worked on
 by multiple developers.
 
 You should push your rebased code to the remote PR/feature branch with
-`git push --force-with-lease` just before merging.
+`git push --force-with-lease --force-if-includes` just before merging.
 
 You can then check out your staging branch and merge your PR/feature branch with
 `git merge --no-ff feature/branch`. The `--no-ff` flag creates a merge commit
 for the PR/feature branch so that the history remains accessible.
 
-**Note: PR/feature branches should be short-lived, so make sure you remove both
-the remote (`git push origin :feature/branch`) and local PR/feature branch
-(`git branch -d feature/branch`).**
+<!-- prettier-ignore -->
+> [!NOTE]
+> PR/feature branches should be short-lived, so make sure you remove both
+> the remote (`git push origin :feature/branch`) and local PR/feature branch
+> (`git branch -d feature/branch`).**
+
+### `--force-with-lease` and `--force-if-includes`
+
+It's important to use `--force-with-lease` together with
+`--force-if-includes`\*\* when force-pushing rebased branches.
+
+`--force-with-lease` alone can be defeated by background auto-fetches (common in
+IDEs like LazyGit, VS Code, etc.) that update your remote-tracking branch
+without you realizing it. When this happens, `--force-with-lease` thinks you've
+seen the latest remote changes and allows the force-push, potentially
+overwriting others' work.
+
+`--force-if-includes` adds an extra safety check: it uses your reflog to verify
+you've actually integrated remote changes into your local branch before allowing
+the force-push.
+
+**References:**
+
+- https://github.com/jesseduffield/lazygit/issues/1668#issuecomment-1956201168
+- https://github.com/jesseduffield/lazygit/issues/1668#issuecomment-1956549518
+- https://stackoverflow.com/questions/65837109/when-should-i-use-git-push-force-if-includes
 
 ## Pull request review
 
@@ -144,6 +185,8 @@ TL;DR
 - `git push`
 - `git push origin :feature/branch` (removes remote branch)
 - `git branch -d feature/branch` (removes local branch)
+
+---
 
 ## Commit messages
 
