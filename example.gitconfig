@@ -1,0 +1,23 @@
+# Git Workflow Configuration
+# Implements the workflow described in README.md
+# Copy to ~/.gitconfig or run equivalent git config --global commands
+
+# Pull with rebase, preserving merge commits from feature branches
+[pull]
+	rebase = merges
+
+# Default to --no-ff for all merges (preserves feature branch history)
+[merge]
+	ff = false
+
+# Main branch only allows fast-forward merges (keeps linear history)
+[branch "main"]
+	mergeOptions = --ff-only
+
+# Preserve merge commits when rebasing (safer for branches with merges)
+[rebase]
+	rebaseMerges = true
+
+# Extra safety check for --force-with-lease (protects against auto-fetches)
+[push]
+	useForceIfIncludes = true

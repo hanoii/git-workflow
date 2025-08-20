@@ -19,6 +19,12 @@ rebases is that they might require you to force-push, which is again dangerous,
 but in this workflow you would only be force-pushing to the feature branch you
 are working on and about to merge, so it's not a huge deal.
 
+<!-- prettier-ignore -->
+> [!TIP]
+> All the git configurations mentioned in this workflow
+> are available in [`example.gitconfig`](example.gitconfig). Copy the settings
+> to your `~/.gitconfig` or run the equivalent `git config --global` commands.
+
 <!-- toc -->
 
 - [Pull rebase keeping merges](#pull-rebase-keeping-merges)
